@@ -36,4 +36,4 @@ async def purge(ctx, *, phrases):
             if any(( i in message.content.lower() for i in phrases)):
                 await message.delete()
 
-bot.run('TOKEN'')
+bot.run('TOKEN')

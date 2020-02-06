@@ -29,11 +29,11 @@ async def on_command_completion(ctx, error):
 @bot.command(
     description='% purge <any amount of phrases, each in its own quotes> - iterates over the whole server and deletes any messages that contain any of the lookup phrases. Only server admins can use the command.'
 )
-async def purge(ctx, *, phrases):
+async def purge(ctx, *phrases):
     phrases = [i.lower() for i in phrases]
     for channel in ctx.guild.text_channels:
         async for message in channel.history(limit=1000000000):
-            if any(( i in message.content.lower() for i in phrases)):
+            if any((i in message.content.lower() for i in phrases)):
                 await message.delete()
 
 bot.run('TOKEN')

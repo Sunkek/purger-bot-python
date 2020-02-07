@@ -39,9 +39,13 @@ async def purge(ctx, channel: Optional[discord.TextChannel]=None, *phrases):
         ]
     else:
         channels = ctx.guild.text_channels
+    counter = 0
     for channel in channels:
         print(channel.name)
         async for message in channel.history(limit=1000000000):
+            counter += 1
+            if counter % 1000 == 0:
+                print(f'Messages checked: {counter}')
             if any((i in message.content.lower() for i in phrases)):
                 print(message.author)
                 print(message.content)

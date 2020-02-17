@@ -61,12 +61,12 @@ async def purgebyphrases(
 @bot.command(
     name='purgebyauthors',
     aliases=['pba'],
-    description='% purgebyauthors <optional start channel ID or mention> <any amount of phrases, each in its own quotes> - iterates over the whole server from top to bottom and deletes any messages that were sent by any of the specified users. If you need to purge down from some specific channel, mention that channel as the first argument. Only server admins can use the command.'
+    description='% purgebyauthors <optional start channel ID or mention> <any amount of user IDs or mentions> - iterates over the whole server from top to bottom and deletes any messages that were sent by any of the specified users. If you need to purge down from some specific channel, mention that channel as the first argument. Only server admins can use the command.'
 )
 async def purgebyauthors(
     ctx, 
     channel: Optional[discord.TextChannel]=None, 
-    authors: commands.Greedy[commands.User]
+    authors: commands.Greedy[discord.User]=[]
 ):
     print(authors)
     if channel:

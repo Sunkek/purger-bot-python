@@ -28,9 +28,15 @@ async def on_command_completion(ctx, error):
 
 @commands.has_permissions(administrator=True)
 @bot.command(
-    description='% purge <optional start channel ID or mention> <any amount of phrases, each in its own quotes> - iterates over the whole server from top to bottom and deletes any messages that contain any of the lookup phrases. Only server admins can use the command.'
+    name='purgebyphrases',
+    aliases=['pbp'],
+    description='% purgebyphrases <optional start channel ID or mention> <any amount of phrases, each in its own quotes> - iterates over the whole server from top to bottom and deletes any messages that contain any of the lookup phrases. If you need to purge down from some specific channel, mention that channel as the first argument. Only server admins can use the command.'
 )
-async def purge(ctx, channel: Optional[discord.TextChannel]=None, *phrases):
+async def purgebyphrases(
+    ctx, 
+    channel: Optional[discord.TextChannel]=None, 
+    *phrases
+):
     phrases = [i.lower() for i in phrases]
     if channel:
         channels = [
@@ -47,6 +53,37 @@ async def purge(ctx, channel: Optional[discord.TextChannel]=None, *phrases):
             if counter % 1000 == 0:
                 print(f'Messages checked: {counter}')
             if any((i in message.content.lower() for i in phrases)):
+                print(message.author)
+                print(message.content)
+                await message.delete()
+
+@commands.has_permissions(administrator=True)
+@bot.command(
+    name='purgebyauthors',
+    aliases=['pba'],
+    description='% purgebyauthors <optional start channel ID or mention> <any amount of phrases, each in its own quotes> - iterates over the whole server from top to bottom and deletes any messages that were sent by any of the specified users. If you need to purge down from some specific channel, mention that channel as the first argument. Only server admins can use the command.'
+)
+async def purgebyauthors(
+    ctx, 
+    channel: Optional[discord.TextChannel]=None, 
+    authors: commands.Greedy[commands.User]
+):
+    print(authors)
+    if channel:
+        channels = [
+            i for i in ctx.guild.text_channels 
+            if i.position >= channel.position
+        ]
+    else:
+        channels = ctx.guild.text_channels
+    counter = 0
+    for channel in channels:
+        print(channel.name)
+        async for message in channel.history(limit=1000000000):
+            counter += 1
+            if counter % 1000 == 0:
+                print(f'Messages checked: {counter}')
+            if message.author in authors:
                 print(message.author)
                 print(message.content)
                 await message.delete()
